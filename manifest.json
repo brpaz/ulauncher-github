@@ -1,0 +1,25 @@
+{
+    "manifest_version": "2",
+    "api_version": "1",
+    "name": "GitHub",
+    "description": "Interact with your GitHub account",
+    "developer_name": "Bruno Paz",
+    "icon": "images/icon.png",
+    "options": {
+        "query_debounce": 1
+    },
+    "preferences": [{
+            "id": "kw",
+            "type": "keyword",
+            "name": "GitHub",
+            "default_value": "gh"
+        },
+        {
+            "id": "access_token",
+            "type": "input",
+            "name": "GitHub access token",
+            "description": "The Api Key required to connect to Heroku. Get one from <a href=\"https://github.com/settings/tokens/new\">here</a>",
+            "default_value": ""
+        }
+    ]
+}
