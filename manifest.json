@@ -18,7 +18,7 @@
             "id": "access_token",
             "type": "input",
             "name": "GitHub access token",
-            "description": "The Api Key required to connect to Heroku. Get one from <a href=\"https://github.com/settings/tokens/new\">here</a>",
+            "description": "The Personal Access token to authenticate on GitHub API",
             "default_value": ""
         }
     ]
