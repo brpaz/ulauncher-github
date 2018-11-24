@@ -38,6 +38,35 @@ class GitHubExtension(Extension):
         self.githubApi = None
         self.user = None
 
+    def cache_warmup(self):
+        """ warms-up the cache on Ulauncher start """
+
+        # Cache user repos
+        repos = self.githubApi.get_user().get_repos(
+            sort="updated", direction="desc")
+
+        # need to iterate all repos to force the PaginatesList to get all the results
+        for repo in repos:
+            continue
+
+        Cache.set(USER_REPOS_CACHE_KEY, repos, USER_REPOS_CACHE_TTL)
+
+        # Cache gists
+        gists = self.githubApi.get_user().get_gists()
+
+        for gist in gists:
+            continue
+
+        Cache.set(USER_GISTS_CACHE_KEY, gists, USER_GISTS_CACHE_TTL)
+
+        repos = self.githubApi.get_user().get_starred()
+
+        for repo in repos:
+            continue
+
+        Cache.set(USER_STARRED_REPOS_CACHE_KEY,
+                  repos, USER_STARRED_REPOS_CACHE_TTL)
+
     def show_menu(self):
         """ Show the main extension menu, when the user types the extension keyword without arguments """
 
@@ -358,6 +387,7 @@ class PreferencesEventListener(EventListener):
         Cache.purge()
         try:
             extension.user = extension.githubApi.get_user()
+            extension.cache_warmup()
         except GithubException as e:
             LOGGER.error(e)
             extension.user = None
@@ -370,6 +400,7 @@ class PreferencesUpdateEventListener(EventListener):
             Cache.purge()
             try:
                 extension.user = extension.githubApi.get_user()
+                extension.cache_warmup()
             except GithubException as e:
                 LOGGER.error(e)
                 extension.user = None
