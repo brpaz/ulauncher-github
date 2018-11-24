@@ -1,28 +1,33 @@
+""" GitHub Ulauncher Extension """
+import json
 import logging
+import os
 import re
-from ulauncher.api.client.Extension import Extension
+from threading import Thread, Timer
+
+import gi
+from gi.repository import Notify
+from github import Github, GithubException
 from ulauncher.api.client.EventListener import EventListener
-from ulauncher.api.shared.event import KeywordQueryEvent, ItemEnterEvent, PreferencesEvent, PreferencesUpdateEvent
-from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
-from ulauncher.api.shared.action.RenderResultListAction import RenderResultListAction
-from ulauncher.api.shared.action.DoNothingAction import DoNothingAction
+from ulauncher.api.client.Extension import Extension
+from ulauncher.api.shared.action.ExtensionCustomAction import \
+    ExtensionCustomAction
 from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
 from ulauncher.api.shared.action.OpenUrlAction import OpenUrlAction
-from ulauncher.api.shared.action.ExtensionCustomAction import ExtensionCustomAction
+from ulauncher.api.shared.action.RenderResultListAction import \
+    RenderResultListAction
 from ulauncher.api.shared.action.SetUserQueryAction import SetUserQueryAction
-from github import Github, GithubException
-from cache import Cache
+from ulauncher.api.shared.event import (ItemEnterEvent, KeywordQueryEvent,
+                                        PreferencesEvent,
+                                        PreferencesUpdateEvent)
+from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
+from ulauncher.config import CACHE_DIR
+
+gi.require_version('Notify', '0.7')
 
 LOGGER = logging.getLogger(__name__)
 
-USER_REPOS_CACHE_KEY = 'user_repos'
-USER_REPOS_CACHE_TTL = 1800
-USER_GISTS_CACHE_KEY = 'user_gists'
-USER_GISTS_CACHE_TTL = 1800
-USER_ORGANIZATIONS_CACHE_KEY = 'user_orgs'
-USER_ORGANIZATIONS_CACHE_TTL = 3600
-USER_STARRED_REPOS_CACHE_KEY = 'user_starred_repos'
-USER_STARRED_REPOS_CACHE_TTL = 3600
+FETCH_INTERVAL = 86400
 
 
 class GitHubExtension(Extension):
@@ -35,42 +40,121 @@ class GitHubExtension(Extension):
         self.subscribe(PreferencesEvent, PreferencesEventListener())
         self.subscribe(PreferencesUpdateEvent,
                        PreferencesUpdateEventListener())
-        self.githubApi = None
+        self.subscribe(ItemEnterEvent, ItemEnterEventListener())
+
+        self.github = None
         self.user = None
+        self.repos_cache_file = os.path.join(
+            CACHE_DIR, 'github_repos_cache.json')
+        self.repos_starred_cache_file = os.path.join(
+            CACHE_DIR, 'github_repos_starred_cache.json')
+        self.gists_cache_file = os.path.join(
+            CACHE_DIR, 'github_gists_cache.json')
 
-    def cache_warmup(self):
-        """ warms-up the cache on Ulauncher start """
+        self.init_cache()
 
-        # Cache user repos
-        repos = self.githubApi.get_user().get_repos(
+        Notify.init("UlauncherGitHub")
+
+    def init_cache(self):
+        """ Initializes cache files """
+        if not os.path.exists(self.repos_cache_file):
+            with open(self.repos_cache_file, 'w') as outfile:
+                json.dump([], outfile)
+
+        if not os.path.exists(self.repos_starred_cache_file):
+            with open(self.repos_starred_cache_file, 'w') as outfile:
+                json.dump([], outfile)
+
+        if not os.path.exists(self.gists_cache_file):
+            with open(self.gists_cache_file, 'w') as outfile:
+                json.dump([], outfile)
+
+    def refresh_cache(self, notify_on_complete=False):
+        """ Spawns a new Thread and refresh the local cached data """
+
+        t = Thread(target=self.fetch_data_from_github,
+                   args=(notify_on_complete,))
+        t.daemon = True
+        t.start()
+
+    def fetch_data_from_github(self, notify_on_complete=False):
+        """ Fetch user repositories, gists and other data from GitHub. This should re run in a separate thread. """
+
+        self.fetch_repos()
+        self.fetch_gists()
+        self.fetch_starred()
+
+        if notify_on_complete:
+            Notify.Notification.new(
+                "Ulauncher GitHub", "Index Finished").show()
+
+        timer = Timer(FETCH_INTERVAL,
+                      self.fetch_data_from_github, args=(False,))
+        timer.daemon = True
+        timer.start()
+
+    def fetch_repos(self):
+        """ Fetch user repositories """
+
+        LOGGER.info("Fetching user repos from GitHub")
+
+        repos = self.github.get_user().get_repos(
             sort="updated", direction="desc")
 
         # need to iterate all repos to force the PaginatesList to get all the results
+        repo_data = []
         for repo in repos:
-            continue
+            repo_data.append({
+                'name': repo.name,
+                'fullname': repo.full_name,
+                'description': repo.description,
+                'url': repo.html_url,
+                'stars': repo.stargazers_count
+            })
 
-        Cache.set(USER_REPOS_CACHE_KEY, repos, USER_REPOS_CACHE_TTL)
+        with open(self.repos_cache_file, 'w') as outfile:
+            json.dump(repo_data, outfile)
 
-        # Cache gists
-        gists = self.githubApi.get_user().get_gists()
+    def fetch_gists(self):
+        """ Fetch user gists """
+
+        LOGGER.info("Fetching user gists from GitHub")
+
+        gists_data = []
+        gists = self.github.get_user().get_gists()
 
         for gist in gists:
-            continue
+            gists_data.append({
+                'description': gist.description,
+                'url': gist.html_url,
+                'filename': gist.files.values()[0].filename if gist.files.values() else ""
+            })
 
-        Cache.set(USER_GISTS_CACHE_KEY, gists, USER_GISTS_CACHE_TTL)
+        with open(self.gists_cache_file, 'w') as outfile:
+            json.dump(gists_data, outfile)
 
-        repos = self.githubApi.get_user().get_starred()
+    def fetch_starred(self):
+        """ Fetch starred repos """
 
+        LOGGER.info("Fetching starred repos from GitHub")
+
+        repo_data = []
+
+        repos = self.github.get_user().get_starred()
         for repo in repos:
-            continue
+            repo_data.append({
+                'name': repo.name,
+                'fullname': repo.full_name,
+                'description': repo.description,
+                'url': repo.html_url,
+                'stars': repo.stargazers_count
+            })
 
-        Cache.set(USER_STARRED_REPOS_CACHE_KEY,
-                  repos, USER_STARRED_REPOS_CACHE_TTL)
+        with open(self.repos_starred_cache_file, 'w') as outfile:
+            json.dump(repo_data, outfile)
 
-    def show_menu(self):
+    def show_menu(self, keyword):
         """ Show the main extension menu, when the user types the extension keyword without arguments """
-
-        keyword = self.preferences["kw"]
 
         return RenderResultListAction([
             ExtensionResultItem(icon='images/icon.png',
@@ -112,7 +196,12 @@ class GitHubExtension(Extension):
                                 name="GitHub Status",
                                 description="Opens the GitHub status page",
                                 highlightable=False,
-                                on_enter=OpenUrlAction("https://status.github.com"))
+                                on_enter=OpenUrlAction("https://status.github.com")),
+            ExtensionResultItem(icon='images/icon.png',
+                                name="Refresh Cache",
+                                description="Refreshes the local cache. This might some time to process.",
+                                highlightable=False,
+                                on_enter=ExtensionCustomAction({"action": "refresh_cache"}))
         ])
 
     def account_menu(self, query):
@@ -120,7 +209,7 @@ class GitHubExtension(Extension):
 
         # Authenticate the user, if its not already authenticated.
         if self.user is None:
-            self.user = self.githubApi.get_user()
+            self.user = self.github.get_user()
 
         return RenderResultListAction([
             ExtensionResultItem(icon='images/icon.png',
@@ -163,25 +252,21 @@ class GitHubExtension(Extension):
     def user_repos(self, query):
         """ List the repos owned by the user """
 
-        repos = Cache.get(USER_REPOS_CACHE_KEY)
-
-        if repos is None:
-            repos = self.githubApi.get_user().get_repos(
-                sort="updated", direction="desc")
-
-            Cache.set(USER_REPOS_CACHE_KEY, repos, USER_REPOS_CACHE_TTL)
+        with open(self.repos_cache_file) as f:
+            repos = json.load(f)
 
         items = []
         for repo in repos:
 
-            if query and query.lower() not in repo.name.lower():
+            if query and query.lower() not in repo['name'].lower():
                 continue
 
             items.append(ExtensionResultItem(
                 icon='images/icon.png',
-                name=repo.name,
-                description=repo.description,
-                on_enter=OpenUrlAction(repo.html_url)
+                name=repo['name'],
+                description=repo['description'],
+                highlightable=False if not query else True,
+                on_enter=OpenUrlAction(repo['url'])
             ))
 
         return RenderResultListAction(items[:8])
@@ -190,30 +275,24 @@ class GitHubExtension(Extension):
         """ List user gists"""
 
         query = query.lower()
-        gists = Cache.get(USER_GISTS_CACHE_KEY)
-
-        if gists is None:
-            gists = self.githubApi.get_user().get_gists()
-
-            Cache.set(USER_GISTS_CACHE_KEY, gists, USER_GISTS_CACHE_TTL)
+        gists = []
+        with open(self.gists_cache_file) as f:
+            gists = json.load(f)
 
         items = []
         for gist in gists:
 
-            files = gist.files.values()
-            desc = ""
+            desc = gist['description'] or ""
 
-            if gist.description is not None:
-                desc = gist.description
-
-            if query and query not in desc.lower() or query not in files[0].filename:
+            if query and query not in desc.lower() or query not in gist['filename'].lower():
                 continue
 
             items.append(ExtensionResultItem(
                 icon='images/icon.png',
-                name=files[0].filename.encode('utf-8'),
+                name=gist['filename'].encode('utf-8'),
                 description=desc,
-                on_enter=OpenUrlAction(gist.html_url)
+                highlightable=False if not query else True,
+                on_enter=OpenUrlAction(gist['url'])
             ))
 
         return RenderResultListAction(items[:8])
@@ -230,7 +309,7 @@ class GitHubExtension(Extension):
                 on_enter=HideWindowAction()
             )])
 
-        repos = self.githubApi.search_repositories(query=query)[:8]
+        repos = self.github.search_repositories(query=query)[:8]
 
         items = []
 
@@ -257,7 +336,7 @@ class GitHubExtension(Extension):
                 on_enter=HideWindowAction()
             )])
 
-        users = self.githubApi.search_users(
+        users = self.github.search_users(
             query=query, sort="followers", order="desc")[:8]
 
         items = []
@@ -274,13 +353,7 @@ class GitHubExtension(Extension):
     def user_orgs(self, query):
         """ List the Organizations the user belongs to"""
 
-        orgs = Cache.get(USER_ORGANIZATIONS_CACHE_KEY)
-
-        if orgs is None:
-            orgs = self.githubApi.get_user().get_orgs()
-
-            Cache.set(USER_ORGANIZATIONS_CACHE_KEY,
-                      orgs, USER_ORGANIZATIONS_CACHE_TTL)
+        orgs = self.github.get_user().get_orgs()
 
         items = []
         for org in orgs:
@@ -291,6 +364,7 @@ class GitHubExtension(Extension):
             items.append(ExtensionResultItem(
                 icon='images/icon.png',
                 name=org.name,
+                highlightable=False if not query else True,
                 on_enter=OpenUrlAction(org.html_url)
             ))
 
@@ -299,25 +373,20 @@ class GitHubExtension(Extension):
     def user_starred_repos(self, query):
         """ List the repositories the user has starred"""
 
-        repos = Cache.get(USER_STARRED_REPOS_CACHE_KEY)
-
-        if repos is None:
-            repos = self.githubApi.get_user().get_starred()
-
-            Cache.set(USER_STARRED_REPOS_CACHE_KEY,
-                      repos, USER_STARRED_REPOS_CACHE_TTL)
+        with open(self.repos_starred_cache_file) as f:
+            repos = json.load(f)
 
         items = []
         for repo in repos:
 
-            if query and query.lower() not in repo.name.lower():
+            if query and query.lower() not in repo['name'].lower():
                 continue
 
             items.append(ExtensionResultItem(
                 icon='images/icon.png',
-                name=repo.name,
-                description=repo.description,
-                on_enter=OpenUrlAction(repo.html_url)
+                name=repo['name'],
+                description=repo['description'],
+                on_enter=OpenUrlAction(repo['url'])
             ))
 
         return RenderResultListAction(items[:8])
@@ -327,10 +396,20 @@ class KeywordQueryEventListener(EventListener):
 
     def on_event(self, event, extension):
 
-        query = event.get_argument()
+        query = event.get_argument() or ""
+        keyword = event.get_keyword()
 
-        if query is None:
-            return extension.show_menu()
+        if keyword == 'gists':
+            return extension.user_gists(query)
+
+        if keyword == 'ghrepos':
+            return extension.user_repos(query)
+
+        if keyword == 'ghsearch':
+            return extension.search_public_repos(query)
+
+        if not query:
+            return extension.show_menu(keyword)
 
         # Get the action based on the search terms
         account = re.findall(r"^account(.*)?$", query, re.IGNORECASE)
@@ -383,11 +462,14 @@ class KeywordQueryEventListener(EventListener):
 
 class PreferencesEventListener(EventListener):
     def on_event(self, event, extension):
-        extension.githubApi = Github(event.preferences['access_token'])
-        Cache.purge()
+        extension.github = Github(event.preferences['access_token'])
         try:
-            extension.user = extension.githubApi.get_user()
-            extension.cache_warmup()
+            extension.user = extension.github.get_user()
+
+            t = Thread(target=extension.fetch_data_from_github)
+            t.daemon = True
+            t.start()
+
         except GithubException as e:
             LOGGER.error(e)
             extension.user = None
@@ -396,14 +478,26 @@ class PreferencesEventListener(EventListener):
 class PreferencesUpdateEventListener(EventListener):
     def on_event(self, event, extension):
         if event.id == 'access_token':
-            extension.githubApi = Github(event.new_value)
-            Cache.purge()
+            extension.github = Github(event.new_value)
             try:
-                extension.user = extension.githubApi.get_user()
-                extension.cache_warmup()
+                extension.user = extension.github.get_user()
+
+                extension.refresh_cache()
             except GithubException as e:
                 LOGGER.error(e)
                 extension.user = None
+
+
+class ItemEnterEventListener(EventListener):
+    """ Handles Custom ItemEnter event """
+
+    def on_event(self, event, extension):
+        """ handle function """
+        data = event.get_data()
+        if "action" in data and data['action'] == 'refresh_cache':
+            extension.refresh_cache(True)
+            Notify.Notification.new(
+                "Ulauncher GitHub", "Start updating local cache").show()
 
 
 if __name__ == '__main__':
