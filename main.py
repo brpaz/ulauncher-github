@@ -14,6 +14,7 @@ from ulauncher.api.shared.action.ExtensionCustomAction import \
     ExtensionCustomAction
 from ulauncher.api.shared.action.HideWindowAction import HideWindowAction
 from ulauncher.api.shared.action.OpenUrlAction import OpenUrlAction
+from ulauncher.api.shared.action.CopyToClipboardAction import CopyToClipboardAction
 from ulauncher.api.shared.action.RenderResultListAction import \
     RenderResultListAction
 from ulauncher.api.shared.action.SetUserQueryAction import SetUserQueryAction
@@ -161,27 +162,27 @@ class GitHubExtension(Extension):
                                 name="My Account",
                                 description="Access your profile info and common pages like your Issues, Pull Requests etc.",
                                 highlightable=False,
-                                on_enter=SetUserQueryAction("%s account" % keyword)),
+                                on_enter=SetUserQueryAction("%s account " % keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Organizations",
                                 description="List your GitHub Organizations",
                                 highlightable=False,
-                                on_enter=SetUserQueryAction("%s orgs" % keyword)),
+                                on_enter=SetUserQueryAction("%s orgs " % keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Repositories",
                                 description="List the GitHub repositories that you are a member of",
                                 highlightable=False,
-                                on_enter=SetUserQueryAction("%s repos" % keyword)),
+                                on_enter=SetUserQueryAction("%s repos " % keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Starred Repos",
                                 description="List your Starred Repos",
                                 highlightable=False,
-                                on_enter=SetUserQueryAction("%s starred" % keyword)),
+                                on_enter=SetUserQueryAction("%s starred " % keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Gists",
                                 description="List your created Gists",
                                 highlightable=False,
-                                on_enter=SetUserQueryAction("%s gists" % keyword)),
+                                on_enter=SetUserQueryAction("%s gists " % keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Search public repos",
                                 description="Search on Public GitHub repositories",
@@ -246,7 +247,13 @@ class GitHubExtension(Extension):
                                 name="Issues",
                                 description="Open your Issues page on GitHub website",
                                 highlightable=False,
-                                on_enter=OpenUrlAction("https://github.com/issues"))
+                                on_enter=OpenUrlAction("https://github.com/issues")),
+            ExtensionResultItem(icon='images/icon.png',
+                                name="Access tokens",
+                                description="Manage your personal access tokens",
+                                highlightable=False,
+                                on_enter=OpenUrlAction("https://github.com/settings/tokens")),
+
         ])
 
     def user_repos(self, query):
@@ -258,15 +265,16 @@ class GitHubExtension(Extension):
         items = []
         for repo in repos:
 
-            if query and query.lower() not in repo['name'].lower():
+            if query and query.lower() not in repo['fullname'].lower():
                 continue
 
             items.append(ExtensionResultItem(
                 icon='images/icon.png',
-                name=repo['name'],
+                name=repo['fullname'],
                 description=repo['description'],
                 highlightable=False if not query else True,
-                on_enter=OpenUrlAction(repo['url'])
+                on_enter=OpenUrlAction(repo['url']),
+                on_alt_enter=CopyToClipboardAction(repo['url'])
             ))
 
         return RenderResultListAction(items[:8])
@@ -292,7 +300,8 @@ class GitHubExtension(Extension):
                 name=gist['filename'].encode('utf-8'),
                 description=desc,
                 highlightable=False if not query else True,
-                on_enter=OpenUrlAction(gist['url'])
+                on_enter=OpenUrlAction(gist['url']),
+                on_alt_enter=CopyToClipboardAction(gist['url'])
             ))
 
         return RenderResultListAction(items[:8])
@@ -319,7 +328,8 @@ class GitHubExtension(Extension):
                 name="%s (%s stars)" % (
                     repo.name.encode('utf-8'), repo.stargazers_count),
                 description=repo.description.encode('utf-8'),
-                on_enter=OpenUrlAction(repo.html_url)
+                on_enter=OpenUrlAction(repo.html_url),
+                on_alt_enter=CopyToClipboardAction(repo.html_url)
             ))
 
         return RenderResultListAction(items)
@@ -345,7 +355,8 @@ class GitHubExtension(Extension):
             items.append(ExtensionResultItem(
                 icon='images/icon.png',
                 name=user.name,
-                on_enter=OpenUrlAction(user.html_url)
+                on_enter=OpenUrlAction(user.html_url),
+                on_alt_enter=CopyToClipboardAction(user.html_url)
             ))
 
         return RenderResultListAction(items)
@@ -365,7 +376,8 @@ class GitHubExtension(Extension):
                 icon='images/icon.png',
                 name=org.name,
                 highlightable=False if not query else True,
-                on_enter=OpenUrlAction(org.html_url)
+                on_enter=OpenUrlAction(org.html_url),
+                on_alt_enter=CopyToClipboardAction(org.html_url)
             ))
 
         return RenderResultListAction(items[:8])
@@ -386,7 +398,8 @@ class GitHubExtension(Extension):
                 icon='images/icon.png',
                 name=repo['name'],
                 description=repo['description'],
-                on_enter=OpenUrlAction(repo['url'])
+                on_enter=OpenUrlAction(repo['url']),
+                on_alt_enter=CopyToClipboardAction(repo['url'])
             ))
 
         return RenderResultListAction(items[:8])
@@ -443,12 +456,8 @@ class KeywordQueryEventListener(EventListener):
             if starred:
                 return extension.user_starred_repos(starred[0].strip())
 
-            return RenderResultListAction([
-                ExtensionResultItem(icon='images/icon.png',
-                                    name='Please select a valid option',
-                                    highlightable=False,
-                                    on_enter=HideWindowAction())
-            ])
+            # by default search on user repos
+            return extension.user_repos(query)
 
         except GithubException as e:
             return RenderResultListAction([
