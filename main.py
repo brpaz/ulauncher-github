@@ -197,7 +197,7 @@ class GitHubExtension(Extension):
                                 name="GitHub Status",
                                 description="Opens the GitHub status page",
                                 highlightable=False,
-                                on_enter=OpenUrlAction("https://status.github.com")),
+                                on_enter=OpenUrlAction("https://www.githubstatus.com/")),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Refresh Cache",
                                 description="Refreshes the local cache. This might some time to process.",
