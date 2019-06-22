@@ -5,8 +5,6 @@ import os
 import re
 from threading import Thread, Timer
 
-import gi
-from gi.repository import Notify
 from github import Github, GithubException
 from ulauncher.api.client.EventListener import EventListener
 from ulauncher.api.client.Extension import Extension
@@ -23,8 +21,6 @@ from ulauncher.api.shared.event import (ItemEnterEvent, KeywordQueryEvent,
                                         PreferencesUpdateEvent)
 from ulauncher.api.shared.item.ExtensionResultItem import ExtensionResultItem
 from ulauncher.config import CACHE_DIR
-
-gi.require_version('Notify', '0.7')
 
 LOGGER = logging.getLogger(__name__)
 
@@ -45,16 +41,14 @@ class GitHubExtension(Extension):
 
         self.github = None
         self.user = None
-        self.repos_cache_file = os.path.join(
-            CACHE_DIR, 'github_repos_cache.json')
+        self.repos_cache_file = os.path.join(CACHE_DIR,
+                                             'github_repos_cache.json')
         self.repos_starred_cache_file = os.path.join(
             CACHE_DIR, 'github_repos_starred_cache.json')
-        self.gists_cache_file = os.path.join(
-            CACHE_DIR, 'github_gists_cache.json')
+        self.gists_cache_file = os.path.join(CACHE_DIR,
+                                             'github_gists_cache.json')
 
         self.init_cache()
-
-        Notify.init("UlauncherGitHub")
 
     def init_cache(self):
         """ Initializes cache files """
@@ -70,27 +64,25 @@ class GitHubExtension(Extension):
             with open(self.gists_cache_file, 'w') as outfile:
                 json.dump([], outfile)
 
-    def refresh_cache(self, notify_on_complete=False):
+    def refresh_cache(self):
         """ Spawns a new Thread and refresh the local cached data """
 
-        t = Thread(target=self.fetch_data_from_github,
-                   args=(notify_on_complete,))
-        t.daemon = True
-        t.start()
+        # pylint: disable=invalid-name
+        th = Thread(target=self.fetch_data_from_github)
+        th.daemon = True
+        th.start()
 
-    def fetch_data_from_github(self, notify_on_complete=False):
-        """ Fetch user repositories, gists and other data from GitHub. This should re run in a separate thread. """
+    def fetch_data_from_github(self):
+        """
+        Fetch user repositories, gists and other data from GitHub.
+        This should re run in a separate thread.
+        """
 
         self.fetch_repos()
         self.fetch_gists()
         self.fetch_starred()
 
-        if notify_on_complete:
-            Notify.Notification.new(
-                "Ulauncher GitHub", "Index Finished").show()
-
-        timer = Timer(FETCH_INTERVAL,
-                      self.fetch_data_from_github, args=(False,))
+        timer = Timer(FETCH_INTERVAL, self.fetch_data_from_github)
         timer.daemon = True
         timer.start()
 
@@ -99,8 +91,8 @@ class GitHubExtension(Extension):
 
         LOGGER.info("Fetching user repos from GitHub")
 
-        repos = self.github.get_user().get_repos(
-            sort="updated", direction="desc")
+        repos = self.github.get_user().get_repos(sort="updated",
+                                                 direction="desc")
 
         # need to iterate all repos to force the PaginatesList to get all the results
         repo_data = []
@@ -126,9 +118,13 @@ class GitHubExtension(Extension):
 
         for gist in gists:
             gists_data.append({
-                'description': gist.description,
-                'url': gist.html_url,
-                'filename': gist.files.values()[0].filename if gist.files.values() else ""
+                'description':
+                gist.description,
+                'url':
+                gist.html_url,
+                'filename':
+                list(gist.files.values())[0].filename if list(
+                    gist.files.values()) else ""
             })
 
         with open(self.gists_cache_file, 'w') as outfile:
@@ -155,57 +151,69 @@ class GitHubExtension(Extension):
             json.dump(repo_data, outfile)
 
     def show_menu(self, keyword):
-        """ Show the main extension menu, when the user types the extension keyword without arguments """
+        """
+        Show the main extension menu,
+        when the user types the extension keyword without arguments
+        """
 
         return RenderResultListAction([
-            ExtensionResultItem(icon='images/icon.png',
-                                name="My Account",
-                                description="Access your profile info and common pages like your Issues, Pull Requests etc.",
-                                highlightable=False,
-                                on_enter=SetUserQueryAction("%s account " % keyword)),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="My Account",
+                description="Access your profile info and common pages like your Issues, Pull Requests etc.",  # pylint: disable=line-too-long
+                highlightable=False,
+                on_enter=SetUserQueryAction("%s account " % keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Organizations",
                                 description="List your GitHub Organizations",
                                 highlightable=False,
-                                on_enter=SetUserQueryAction("%s orgs " % keyword)),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="Repositories",
-                                description="List the GitHub repositories that you are a member of",
-                                highlightable=False,
-                                on_enter=SetUserQueryAction("%s repos " % keyword)),
+                                on_enter=SetUserQueryAction("%s orgs " %
+                                                            keyword)),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="Repositories",
+                description="List the GitHub repositories that you are a member of",
+                highlightable=False,
+                on_enter=SetUserQueryAction("%s repos " % keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Starred Repos",
                                 description="List your Starred Repos",
                                 highlightable=False,
-                                on_enter=SetUserQueryAction("%s starred " % keyword)),
+                                on_enter=SetUserQueryAction("%s starred " %
+                                                            keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Gists",
                                 description="List your created Gists",
                                 highlightable=False,
-                                on_enter=SetUserQueryAction("%s gists " % keyword)),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="Search public repos",
-                                description="Search on Public GitHub repositories",
-                                highlightable=False,
-                                on_enter=SetUserQueryAction("%s search " % keyword)),
+                                on_enter=SetUserQueryAction("%s gists " %
+                                                            keyword)),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="Search public repos",
+                description="Search on Public GitHub repositories",
+                highlightable=False,
+                on_enter=SetUserQueryAction("%s search " % keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Search Users",
                                 description="Search GitHub users",
                                 highlightable=False,
-                                on_enter=SetUserQueryAction("%s users " % keyword)),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="GitHub Status",
-                                description="Opens the GitHub status page",
-                                highlightable=False,
-                                on_enter=OpenUrlAction("https://status.github.com")),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="Refresh Cache",
-                                description="Refreshes the local cache. This might some time to process.",
-                                highlightable=False,
-                                on_enter=ExtensionCustomAction({"action": "refresh_cache"}))
+                                on_enter=SetUserQueryAction("%s users " %
+                                                            keyword)),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="GitHub Status",
+                description="Opens the GitHub status page",
+                highlightable=False,
+                on_enter=OpenUrlAction("https://status.github.com")),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="Refresh Cache",
+                description="Refreshes the local cache. This might some time to process.",
+                highlightable=False,
+                on_enter=ExtensionCustomAction({"action": "refresh_cache"}))
         ])
 
-    def account_menu(self, query):
+    def account_menu(self):
         """ Show your menu with links for GitHub pages """
 
         # Authenticate the user, if its not already authenticated.
@@ -214,53 +222,63 @@ class GitHubExtension(Extension):
 
         return RenderResultListAction([
             ExtensionResultItem(icon='images/icon.png',
-                                name="Logged in as %s (%s)" % (
-                                    self.user.name, self.user.login),
+                                name="Logged in as %s (%s)" %
+                                (self.user.name, self.user.login),
                                 highlightable=False,
                                 on_enter=OpenUrlAction(self.user.html_url)),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="Profile",
-                                description="Open your User Profile page on GitHub website",
-                                highlightable=False,
-                                on_enter=OpenUrlAction("https://github.com/%s" % self.user.login)),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="Repos",
-                                description="Open your Repositories page on GitHub website",
-                                highlightable=False,
-                                on_enter=OpenUrlAction("https://github.com/%s?tab=repositories" % self.user.login)),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="Starred Repos",
-                                description="Open your Starred repositories page on GitHub website",
-                                highlightable=False,
-                                on_enter=OpenUrlAction("https://github.com/%s?tab=stars" % self.user.login)),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="Gists",
-                                description="Open your Gists",
-                                highlightable=False,
-                                on_enter=OpenUrlAction("https://gist.github.com")),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="Pull Requests",
-                                description="Open your Pull requests page on GitHub website",
-                                highlightable=False,
-                                on_enter=OpenUrlAction("https://github.com/pulls")),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="Issues",
-                                description="Open your Issues page on GitHub website",
-                                highlightable=False,
-                                on_enter=OpenUrlAction("https://github.com/issues")),
-            ExtensionResultItem(icon='images/icon.png',
-                                name="Access tokens",
-                                description="Manage your personal access tokens",
-                                highlightable=False,
-                                on_enter=OpenUrlAction("https://github.com/settings/tokens")),
-
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="Profile",
+                description="Open your User Profile page on GitHub website",
+                highlightable=False,
+                on_enter=OpenUrlAction("https://github.com/%s" %
+                                       self.user.login)),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="Repos",
+                description="Open your Repositories page on GitHub website",
+                highlightable=False,
+                on_enter=OpenUrlAction(
+                    "https://github.com/%s?tab=repositories" %
+                    self.user.login)),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="Starred Repos",
+                description="Open your Starred repositories page on GitHub website",
+                highlightable=False,
+                on_enter=OpenUrlAction("https://github.com/%s?tab=stars" %
+                                       self.user.login)),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="Gists",
+                description="Open your Gists",
+                highlightable=False,
+                on_enter=OpenUrlAction("https://gist.github.com")),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="Pull Requests",
+                description="Open your Pull requests page on GitHub website",
+                highlightable=False,
+                on_enter=OpenUrlAction("https://github.com/pulls")),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="Issues",
+                description="Open your Issues page on GitHub website",
+                highlightable=False,
+                on_enter=OpenUrlAction("https://github.com/issues")),
+            ExtensionResultItem(
+                icon='images/icon.png',
+                name="Access tokens",
+                description="Manage your personal access tokens",
+                highlightable=False,
+                on_enter=OpenUrlAction("https://github.com/settings/tokens")),
         ])
 
     def user_repos(self, query):
         """ List the repos owned by the user """
 
-        with open(self.repos_cache_file) as f:
-            repos = json.load(f)
+        with open(self.repos_cache_file) as cache_file:
+            repos = json.load(cache_file)
 
         items = []
         for repo in repos:
@@ -268,14 +286,14 @@ class GitHubExtension(Extension):
             if query and query.lower() not in repo['fullname'].lower():
                 continue
 
-            items.append(ExtensionResultItem(
-                icon='images/icon.png',
-                name=repo['fullname'],
-                description=repo['description'],
-                highlightable=False if not query else True,
-                on_enter=OpenUrlAction(repo['url']),
-                on_alt_enter=CopyToClipboardAction(repo['url'])
-            ))
+            items.append(
+                ExtensionResultItem(icon='images/icon.png',
+                                    name=repo['fullname'],
+                                    description=repo['description'] or "",
+                                    highlightable=not query,
+                                    on_enter=OpenUrlAction(repo['url']),
+                                    on_alt_enter=CopyToClipboardAction(
+                                        repo['url'])))
 
         return RenderResultListAction(items[:8])
 
@@ -284,25 +302,26 @@ class GitHubExtension(Extension):
 
         query = query.lower()
         gists = []
-        with open(self.gists_cache_file) as f:
-            gists = json.load(f)
+        with open(self.gists_cache_file) as cache_file:
+            gists = json.load(cache_file)
 
         items = []
         for gist in gists:
 
             desc = gist['description'] or ""
 
-            if query and query not in desc.lower() or query not in gist['filename'].lower():
+            if query and query not in desc.lower(
+            ) or query not in gist['filename'].lower():
                 continue
 
-            items.append(ExtensionResultItem(
-                icon='images/icon.png',
-                name=gist['filename'].encode('utf-8'),
-                description=desc,
-                highlightable=False if not query else True,
-                on_enter=OpenUrlAction(gist['url']),
-                on_alt_enter=CopyToClipboardAction(gist['url'])
-            ))
+            items.append(
+                ExtensionResultItem(icon='images/icon.png',
+                                    name=gist['filename'].encode('utf-8'),
+                                    description=desc,
+                                    highlightable=not query,
+                                    on_enter=OpenUrlAction(gist['url']),
+                                    on_alt_enter=CopyToClipboardAction(
+                                        gist['url'])))
 
         return RenderResultListAction(items[:8])
 
@@ -310,27 +329,28 @@ class GitHubExtension(Extension):
         """ Search public repos """
 
         if not query or len(query) < 3:
-            return RenderResultListAction([ExtensionResultItem(
-                icon='images/icon.png',
-                name='Please keep typing your search query',
-                description='Minimum 3 chars',
-                highlightable=False,
-                on_enter=HideWindowAction()
-            )])
+            return RenderResultListAction([
+                ExtensionResultItem(
+                    icon='images/icon.png',
+                    name='Please keep typing your search query',
+                    description='Minimum 3 chars',
+                    highlightable=False,
+                    on_enter=HideWindowAction())
+            ])
 
         repos = self.github.search_repositories(query=query)[:8]
 
         items = []
 
         for repo in repos:
-            items.append(ExtensionResultItem(
-                icon='images/icon.png',
-                name="%s (%s stars)" % (
-                    repo.name.encode('utf-8'), repo.stargazers_count),
-                description=repo.description.encode('utf-8'),
-                on_enter=OpenUrlAction(repo.html_url),
-                on_alt_enter=CopyToClipboardAction(repo.html_url)
-            ))
+            items.append(
+                ExtensionResultItem(
+                    icon='images/icon.png',
+                    name="%s (%s stars)" %
+                    (repo.name.encode('utf-8'), repo.stargazers_count),
+                    description=repo.description.encode('utf-8'),
+                    on_enter=OpenUrlAction(repo.html_url),
+                    on_alt_enter=CopyToClipboardAction(repo.html_url)))
 
         return RenderResultListAction(items)
 
@@ -338,26 +358,28 @@ class GitHubExtension(Extension):
         """ Search GitHub users """
 
         if not query or len(query) < 3:
-            return RenderResultListAction([ExtensionResultItem(
-                icon='images/icon.png',
-                name='Please keep typing your search query',
-                description='Minimum 3 chars',
-                highlightable=False,
-                on_enter=HideWindowAction()
-            )])
+            return RenderResultListAction([
+                ExtensionResultItem(
+                    icon='images/icon.png',
+                    name='Please keep typing your search query',
+                    description='Minimum 3 chars',
+                    highlightable=False,
+                    on_enter=HideWindowAction())
+            ])
 
-        users = self.github.search_users(
-            query=query, sort="followers", order="desc")[:8]
+        users = self.github.search_users(query=query,
+                                         sort="followers",
+                                         order="desc")[:8]
 
         items = []
 
         for user in users:
-            items.append(ExtensionResultItem(
-                icon='images/icon.png',
-                name=user.name,
-                on_enter=OpenUrlAction(user.html_url),
-                on_alt_enter=CopyToClipboardAction(user.html_url)
-            ))
+            items.append(
+                ExtensionResultItem(icon='images/icon.png',
+                                    name=user.name,
+                                    on_enter=OpenUrlAction(user.html_url),
+                                    on_alt_enter=CopyToClipboardAction(
+                                        user.html_url)))
 
         return RenderResultListAction(items)
 
@@ -372,21 +394,21 @@ class GitHubExtension(Extension):
             if query and query.lower() not in org.name.lower():
                 continue
 
-            items.append(ExtensionResultItem(
-                icon='images/icon.png',
-                name=org.name,
-                highlightable=False if not query else True,
-                on_enter=OpenUrlAction(org.html_url),
-                on_alt_enter=CopyToClipboardAction(org.html_url)
-            ))
+            items.append(
+                ExtensionResultItem(icon='images/icon.png',
+                                    name=org.name,
+                                    highlightable=not query,
+                                    on_enter=OpenUrlAction(org.html_url),
+                                    on_alt_enter=CopyToClipboardAction(
+                                        org.html_url)))
 
         return RenderResultListAction(items[:8])
 
     def user_starred_repos(self, query):
         """ List the repositories the user has starred"""
 
-        with open(self.repos_starred_cache_file) as f:
-            repos = json.load(f)
+        with open(self.repos_starred_cache_file) as cache_file:
+            repos = json.load(cache_file)
 
         items = []
         for repo in repos:
@@ -394,20 +416,23 @@ class GitHubExtension(Extension):
             if query and query.lower() not in repo['name'].lower():
                 continue
 
-            items.append(ExtensionResultItem(
-                icon='images/icon.png',
-                name=repo['name'],
-                description=repo['description'],
-                on_enter=OpenUrlAction(repo['url']),
-                on_alt_enter=CopyToClipboardAction(repo['url'])
-            ))
+            items.append(
+                ExtensionResultItem(icon='images/icon.png',
+                                    name=repo['name'],
+                                    description=repo['description'],
+                                    on_enter=OpenUrlAction(repo['url']),
+                                    on_alt_enter=CopyToClipboardAction(
+                                        repo['url'])))
 
         return RenderResultListAction(items[:8])
 
 
+# pylint: disable=too-many-return-statements
 class KeywordQueryEventListener(EventListener):
+    """ Listen to Input events """
 
     def on_event(self, event, extension):
+        """ Handles event """
 
         query = event.get_argument() or ""
         keyword = event.get_keyword()
@@ -436,7 +461,7 @@ class KeywordQueryEventListener(EventListener):
         try:
 
             if account:
-                return extension.account_menu(account[0].strip())
+                return extension.account_menu()
 
             if repos:
                 return extension.user_repos(repos[0].strip())
@@ -459,41 +484,49 @@ class KeywordQueryEventListener(EventListener):
             # by default search on user repos
             return extension.user_repos(query)
 
-        except GithubException as e:
+        except GithubException as ex:
             return RenderResultListAction([
-                ExtensionResultItem(icon='images/icon.png',
-                                    name='An error ocurred when connecting to GitHub',
-                                    description=str(e),
-                                    highlightable=False,
-                                    on_enter=HideWindowAction())
+                ExtensionResultItem(
+                    icon='images/icon.png',
+                    name='An error ocurred when connecting to GitHub',
+                    description=str(ex),
+                    highlightable=False,
+                    on_enter=HideWindowAction())
             ])
 
 
 class PreferencesEventListener(EventListener):
+    """ Handles preferences initialization event """
+
     def on_event(self, event, extension):
+        """ Handle event """
         extension.github = Github(event.preferences['access_token'])
         try:
             extension.user = extension.github.get_user()
 
+            # pylint: disable=invalid-name
             t = Thread(target=extension.fetch_data_from_github)
             t.daemon = True
             t.start()
 
-        except GithubException as e:
-            LOGGER.error(e)
+        except GithubException as ex:
+            LOGGER.error(ex)
             extension.user = None
 
 
 class PreferencesUpdateEventListener(EventListener):
+    """ Handles Preferences Update event """
+
     def on_event(self, event, extension):
+        """ Event handler """
         if event.id == 'access_token':
             extension.github = Github(event.new_value)
             try:
                 extension.user = extension.github.get_user()
 
                 extension.refresh_cache()
-            except GithubException as e:
-                LOGGER.error(e)
+            except GithubException as ex:
+                LOGGER.error(ex)
                 extension.user = None
 
 
@@ -504,9 +537,7 @@ class ItemEnterEventListener(EventListener):
         """ handle function """
         data = event.get_data()
         if "action" in data and data['action'] == 'refresh_cache':
-            extension.refresh_cache(True)
-            Notify.Notification.new(
-                "Ulauncher GitHub", "Start updating local cache").show()
+            extension.refresh_cache()
 
 
 if __name__ == '__main__':
