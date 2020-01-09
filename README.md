@@ -21,7 +21,7 @@
 
 - [ulauncher 5](https://ulauncher.io/)
 - Python > 3
-- PyGithub Extension (install with `pip install pygithub`)
+- PyGithub Extension (install with `pip3 install pygithub`)
 
 ## Install
 
