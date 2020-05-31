@@ -52,7 +52,24 @@ git clone https://github.com/brpaz/ulauncher-github
 make link
 ```
 
-To see your changes, stop ulauncher and run it from the command line with: `ulauncher -v`.
+The ```make link``` will create a symbolic link to the ulauncher extensions folder.
+
+Next, stop Ulauncher if running and run the following command:
+
+```
+make dev
+```
+
+This will start Ulauncher from the command line with all extensions disabled. In the output you will see something like this:
+
+```
+ VERBOSE=1 ULAUNCHER_WS_API=ws://127.0.0.1:5054/com.github.brpaz.ulauncher-github PYTHONPATH=/usr/lib/python3.8/site-packages /usr/bin/python3 /home/bruno/.local/share/ulauncher/extensions/com.github.brpaz.ulauncher-github/main.py
+```
+
+Run this, command in another terminal window, to laucnh the GitHub Extension.
+
+
+
 
 ## TODO
 

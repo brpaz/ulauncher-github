@@ -66,8 +66,6 @@ class GitHubExtension(Extension):
 
     def refresh_cache(self):
         """ Spawns a new Thread and refresh the local cached data """
-
-        # pylint: disable=invalid-name
         th = Thread(target=self.fetch_data_from_github)
         th.daemon = True
         th.start()
@@ -160,8 +158,7 @@ class GitHubExtension(Extension):
             ExtensionResultItem(
                 icon='images/icon.png',
                 name="My Account",
-                description="Access your profile info and common pages like your Issues, Pull Requests etc.",  # pylint: disable=line-too-long
-                highlightable=False,
+                description="Access your profile page",
                 on_enter=SetUserQueryAction("%s account " % keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Organizations",
@@ -316,7 +313,7 @@ class GitHubExtension(Extension):
 
             items.append(
                 ExtensionResultItem(icon='images/icon.png',
-                                    name=gist['filename'].encode('utf-8'),
+                                    name=gist['filename'],
                                     description=desc,
                                     highlightable=not query,
                                     on_enter=OpenUrlAction(gist['url']),
@@ -347,8 +344,8 @@ class GitHubExtension(Extension):
                 ExtensionResultItem(
                     icon='images/icon.png',
                     name="%s (%s stars)" %
-                    (repo.name.encode('utf-8'), repo.stargazers_count),
-                    description=repo.description.encode('utf-8'),
+                    (repo.name, repo.stargazers_count),
+                    description=repo.description,
                     on_enter=OpenUrlAction(repo.html_url),
                     on_alt_enter=CopyToClipboardAction(repo.html_url)))
 
