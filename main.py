@@ -307,8 +307,8 @@ class GitHubExtension(Extension):
 
             desc = gist['description'] or ""
 
-            if query and query not in desc.lower(
-            ) or query not in gist['filename'].lower():
+            if query and (query not in desc.lower(
+            ) and query not in gist['filename'].lower()):
                 continue
 
             items.append(
