@@ -29,7 +29,6 @@ FETCH_INTERVAL = 86400
 
 class GitHubExtension(Extension):
     """ Main Extension class """
-
     def __init__(self):
         LOGGER.info('Initializing GitHub Extension')
         super(GitHubExtension, self).__init__()
@@ -121,8 +120,8 @@ class GitHubExtension(Extension):
                 'url':
                 gist.html_url,
                 'filename':
-                list(gist.files.values())[0].filename if list(
-                    gist.files.values()) else ""
+                list(gist.files.values())[0].filename
+                if list(gist.files.values()) else ""
             })
 
         with open(self.gists_cache_file, 'w') as outfile:
@@ -155,11 +154,11 @@ class GitHubExtension(Extension):
         """
 
         return RenderResultListAction([
-            ExtensionResultItem(
-                icon='images/icon.png',
-                name="My Account",
-                description="Access your profile page",
-                on_enter=SetUserQueryAction("%s account " % keyword)),
+            ExtensionResultItem(icon='images/icon.png',
+                                name="My Account",
+                                description="Access your profile page",
+                                on_enter=SetUserQueryAction("%s account " %
+                                                            keyword)),
             ExtensionResultItem(icon='images/icon.png',
                                 name="Organizations",
                                 description="List your GitHub Organizations",
@@ -169,7 +168,8 @@ class GitHubExtension(Extension):
             ExtensionResultItem(
                 icon='images/icon.png',
                 name="Repositories",
-                description="List the GitHub repositories that you are a member of",
+                description=
+                "List the GitHub repositories that you are a member of",
                 highlightable=False,
                 on_enter=SetUserQueryAction("%s repos " % keyword)),
             ExtensionResultItem(icon='images/icon.png',
@@ -205,7 +205,8 @@ class GitHubExtension(Extension):
             ExtensionResultItem(
                 icon='images/icon.png',
                 name="Refresh Cache",
-                description="Refreshes the local cache. This might some time to process.",
+                description=
+                "Refreshes the local cache. This might some time to process.",
                 highlightable=False,
                 on_enter=ExtensionCustomAction({"action": "refresh_cache"}))
         ])
@@ -241,7 +242,8 @@ class GitHubExtension(Extension):
             ExtensionResultItem(
                 icon='images/icon.png',
                 name="Starred Repos",
-                description="Open your Starred repositories page on GitHub website",
+                description=
+                "Open your Starred repositories page on GitHub website",
                 highlightable=False,
                 on_enter=OpenUrlAction("https://github.com/%s?tab=stars" %
                                        self.user.login)),
@@ -307,8 +309,8 @@ class GitHubExtension(Extension):
 
             desc = gist['description'] or ""
 
-            if query and (query not in desc.lower(
-            ) and query not in gist['filename'].lower()):
+            if query and (query not in desc.lower()
+                          and query not in gist['filename'].lower()):
                 continue
 
             items.append(
@@ -343,8 +345,7 @@ class GitHubExtension(Extension):
             items.append(
                 ExtensionResultItem(
                     icon='images/icon.png',
-                    name="%s (%s stars)" %
-                    (repo.name, repo.stargazers_count),
+                    name="%s (%s stars)" % (repo.name, repo.stargazers_count),
                     description=repo.description,
                     on_enter=OpenUrlAction(repo.html_url),
                     on_alt_enter=CopyToClipboardAction(repo.html_url)))
@@ -427,20 +428,19 @@ class GitHubExtension(Extension):
 # pylint: disable=too-many-return-statements
 class KeywordQueryEventListener(EventListener):
     """ Listen to Input events """
-
     def on_event(self, event, extension):
         """ Handles event """
 
         query = event.get_argument() or ""
         keyword = event.get_keyword()
 
-        if keyword == 'gists':
+        if keyword == extension.preferences["kw_gists"]:
             return extension.user_gists(query)
 
-        if keyword == 'ghrepos':
+        if keyword == extension.preferences["kw_repos"]:
             return extension.user_repos(query)
 
-        if keyword == 'ghsearch':
+        if keyword == extension.preferences["kw_search"]:
             return extension.search_public_repos(query)
 
         if not query:
@@ -494,7 +494,6 @@ class KeywordQueryEventListener(EventListener):
 
 class PreferencesEventListener(EventListener):
     """ Handles preferences initialization event """
-
     def on_event(self, event, extension):
         """ Handle event """
         extension.github = Github(event.preferences['access_token'])
@@ -513,7 +512,6 @@ class PreferencesEventListener(EventListener):
 
 class PreferencesUpdateEventListener(EventListener):
     """ Handles Preferences Update event """
-
     def on_event(self, event, extension):
         """ Event handler """
         if event.id == 'access_token':
@@ -529,7 +527,6 @@ class PreferencesUpdateEventListener(EventListener):
 
 class ItemEnterEventListener(EventListener):
     """ Handles Custom ItemEnter event """
-
     def on_event(self, event, extension):
         """ handle function """
         data = event.get_data()
