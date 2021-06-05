@@ -27,14 +27,14 @@
             "type": "keyword",
             "name": "GitHub Repos",
             "description": "Access to your GitHub repos",
-            "default_value": "ghrepos"
+            "default_value": "ghr"
         },
         {
             "id": "kw_search",
             "type": "keyword",
             "name": "GitHub Repos Search",
             "description": "Search public repos on GitHub",
-            "default_value": "ghsearch"
+            "default_value": "ghs"
         },
         {
             "id": "access_token",

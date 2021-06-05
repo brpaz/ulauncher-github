@@ -38,8 +38,8 @@ Open ulauncher preferences window -> extensions -> add extension and paste the f
 Besides the main "gh" keyword, which triggers the main extension workflow, this extension have some other keywords that allows you access some of most used actions quickly.
 
 - gists - Access to your Gists
-- ghrepos -> Access to your Repos
-- ghsearch -> Do a repository search
+- ghr -> Access to your Repos
+- ghs -> Do a public repository search
 
 ## Notes
 
@@ -69,23 +69,35 @@ This will start Ulauncher from the command line with all extensions disabled. In
 Run this, command in another terminal window, to laucnh the GitHub Extension.
 
 
-
-
 ## TODO
 
 - Cache user repositories, gists and organizations in background for faster results.
 
 ## Contributing
 
-ALl contributions are welcome.
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-## Show your support
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+## 💛 Support the project
 
-<a href="https://www.buymeacoffee.com/Z1Bu6asGV" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+If this project was useful to you in some form, I would be glad to have your support.  It will help to keep the project alive and to have more time to work on Open Source.
+
+The sinplest form of support is to give a ⭐️ to this repo.
+
+You can also contribute with [GitHub Sponsors](https://github.com/sponsors/brpaz).
+
+[![GitHub Sponsors](https://img.shields.io/badge/GitHub%20Sponsors-Sponsor%20Me-red?style=for-the-badge)](https://github.com/sponsors/brpaz)
 
 
-## License 
+Or if you prefer a one time donation to the project, you can simple:
 
-Copywright @ 2019 [Bruno Paz](https://github.com/brpaz)
+<a href="https://www.buymeacoffee.com/Z1Bu6asGV" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
+## 📝 License
 
-This project is [MIT](LLICENSE) Licensed.
+Copyright © 2020 [Bruno Paz](https://github.com/brpaz).
+
+This project is [MIT](https://opensource.org/licenses/MIT) licensed.
