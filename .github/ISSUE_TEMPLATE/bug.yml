@@ -1,18 +1,20 @@
-name: Bug Report
-description: File a bug report
+name: Bug
+description: Report a bug
 title: "[Bug]: "
-labels: ["bug", "triage"]
+labels: ["bug"]
 assignees:
   - brpaz
 body:
   - type: markdown
     attributes:
       value: |
-        99% of issues related with an extension not working are related with a missing Python dependency that the extension needs.
+        Most issues regarding Ulauncher extensions are caused by missing Python dependencies that are required for the extension to work.
 
-        Before open any issue, please make sure to check the project README for a list of Python extensions to install.
+        If you get a `Type: KeyError` error when saving the extension preferences for example, a missing dependency is mostly the cause.
 
-        Check this [Page](https://ulauncher-extension-doesnt-install-and-now.netlify.app/) for debugging help.
+        Please make sure to check the project README for a list of Python extensions to install.
+
+        Also Check [this](https://ulauncher-extension-doesnt-install-and-now.netlify.app/) website for more details.
   - type: textarea
     id: description
     attributes:
@@ -26,7 +28,7 @@ body:
       label: Relevant log output
       description: |
         Please copy and paste the extension logs. The best way to get them:
-        - Close any Ulauncher instance that you have running
-        - From the command line run: `ulauncher -v --dev |& grep "extension-name"`
-        - Execute the action that is giving error.
+        - Close any Ulauncher instance that you have running (full close, not minimize)
+        - From the command line run: `ulauncher -v --dev |& grep "<extension-name>"`, replacing <extension_name> with the name of the extension. (Ex: ulauncher-github)
+        - Execute the action that is giving error and get the log output.
       render: shell
