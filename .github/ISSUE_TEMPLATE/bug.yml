@@ -18,7 +18,7 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Descprition?
+      label: Description?
       description: Please explain in detail the issue and the steps to reproduce it.
     validations:
       required: true
