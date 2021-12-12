@@ -12,20 +12,20 @@ body:
 
         If you get a `Type: KeyError` error when saving the extension preferences for example, a missing dependency is mostly the cause.
 
-        Please make sure to check the project README for a list of Python extensions to install.
+        Please make sure to check the project `README` for a list of Python extensions to install.
 
         Also Check [this](https://ulauncher-extension-doesnt-install-and-now.netlify.app/) website for more details.
   - type: textarea
     id: description
     attributes:
       label: Descprition?
-      description: Please explain the issue that you found.
+      description: Please explain in detail the issue and the steps to reproduce it.
     validations:
       required: true
   - type: textarea
     id: logs
     attributes:
-      label: Relevant log output
+      label: Extension Logs
       description: |
         Please copy and paste the extension logs. The best way to get them:
         - Close any Ulauncher instance that you have running (full close, not minimize)
