@@ -417,7 +417,7 @@ class GitHubExtension(Extension):
             items.append(
                 ExtensionResultItem(icon='images/icon.png',
                                     name=repo['name'],
-                                    description=repo['description'],
+                                    description=repo['description'] or "",
                                     on_enter=OpenUrlAction(repo['url']),
                                     on_alt_enter=CopyToClipboardAction(
                                         repo['url'])))
