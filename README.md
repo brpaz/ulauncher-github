@@ -1,10 +1,9 @@
 # Ulauncher Github
 
+> [ulauncher](https://ulauncher.io/) Extension that provides quick access to common [GitHub](https://github.com) functionality like your repositorie, assigned issues or Pull Requests and many more.
+[![CI Status](https://img.shields.io/github/workflow/status/brpaz/ulauncher-github/CI?color=orange&label=actions&logo=github&logoColor=orange&style=for-the-badge)](https://github.com/brpaz/ulauncher-docker/workflows)
 [![Ulauncher Extension](https://img.shields.io/badge/Ulauncher-Extension-green.svg?style=for-the-badge)](https://ext.ulauncher.io/-/github-brpaz-ulauncher-github)
-[![CircleCI](https://img.shields.io/circleci/build/github/brpaz/ulauncher-github.svg?style=for-the-badge)](https://circleci.com/gh/brpaz/ulauncher-github)
 ![License](https://img.shields.io/github/license/brpaz/ulauncher-github.svg?style=for-the-badge)
-
-> [ulauncher](https://ulauncher.io/) Extension that provides quick access to common [GitHub](https://github.com) functionality like your repositories or gists.
 
 ## Usage
 
@@ -12,16 +11,15 @@
 
 ## Features
 
-- Search public repos
-- Search uers
-- Quick access to your profile pages, Issues, Pull Requests etc
-- List your repos, organizations and gists.
+- Quick access to your repositories and organizations.
+- Access to your Issues and Pull Requests (Assigned, Created)
+- Search public repos and users
+- Search on [GitHub Documentation pages](https://docs.github.com/en)
 
 ## Requirements
 
 - [ulauncher 5](https://ulauncher.io/)
 - Python > 3
-- PyGithub Extension (install with `pip3 install pygithub`)
 
 ## Install
 
@@ -29,21 +27,48 @@ Open ulauncher preferences window -> extensions -> add extension and paste the f
 
 `https://github.com/brpaz/ulauncher-github`
 
+**This extension requires [PyGitHub](https://pygithub.readthedocs.io/en/latest/introduction.html) and [requests](https://pypi.org/project/requests/) for it to work.**
+
+You can install all the required dependencies by after installing the extension run the following command:
+
+```bash
+cd ~/.local/share/ulauncher/extensions/com.github.com.brpaz.ulauncher-github
+pip install -r requirements.txt
+```
+
 ## Usage
 
-- Before usage you need to configure your Github "access_token" in plugin preferences. You can get one [here](https://github.com/settings/tokens).
+Before being able to start using the extension, you must generate a **Personal Access Token** (PAT) and configure it in the extension settings. The access token will allow the extension to access the GitHub API.
 
-### Keywords
+You can generate yours [here](https://github.com/settings/tokens). Make sure you select at least the permissions for "repo", "read:org", "gist", "user" and "notifications", otherwise you might see errors when using some specific commands in the extension.
 
-Besides the main "gh" keyword, which triggers the main extension workflow, this extension have some other keywords that allows you access some of most used actions quickly.
+This extension provides various commands/keywords to access the different functionality. If you type `GitHub` in Ulauncher you should see the available commands.
 
-- gists - Access to your Gists
-- ghr -> Access to your Repos
-- ghs -> Do a public repository search
+![Extension Screenshot](./assets/screenshots/screenshot_1.png)
 
-## Notes
+These include:
 
-- Repositories, Stars and Gists are cached for 1 day. You can clear your cache, restarting ulauncher or selecting "Refresh cache" from the extension main menu.
+- GitHub: Search Repositories
+- GitHub: Search Users
+- GitHub: My Gists
+- GitHub: My Organizations
+- GitHub: My Assigned Issues
+- GitHub: My Created Issues
+- GitHub: My Assigned Pull Requests
+- GitHub: My Created Pull Requests
+- GitHub: My Notifications
+- GitHub: My Repositories
+- GitHub: My Account
+- GitHub: Search Documentation
+- GitHub: Extension Options
+
+### Note on Cache
+
+When the extension starts, it will download a list of all of your repositories, stars and gists and save them in a `json` file. This helps for performance reasons and GitHub API doesn´t have a way to search on your own and organizations repostories in the same request.
+
+This information is cached for 1 day by default. You can clear your cache and trigger a reindex of the local data by restarting ulauncher or by going to `GitHub: Extension Options -> Refresh cache`.
+
+Depending on the number of repositories you have access, this indexing process might take some time. It is executed in the background and you will receive a notification when the process finishes.
 
 ## Development
 

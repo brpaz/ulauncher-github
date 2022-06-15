@@ -9,32 +9,95 @@
     },
     "preferences": [
         {
-            "id": "kw",
+            "id": "kw_public_repos",
             "type": "keyword",
-            "name": "GitHub",
-            "description": "Access your GitHub account",
-            "default_value": "gh"
+            "name": "GitHub: Search Repositories",
+            "description": "Search public repos on GitHub",
+            "default_value": "gh:search_repos"
+        },
+        {
+            "id": "kw_public_users",
+            "type": "keyword",
+            "name": "GitHub: Search Users",
+            "description": "Search users on GitHub",
+            "default_value": "gh:search:users"
         },
         {
             "id": "kw_gists",
             "type": "keyword",
-            "name": "Gists",
-            "description": "Show your GitHub Gists",
-            "default_value": "gists"
+            "name": "GitHub: My Gists",
+            "description": "List your GitHub Gists",
+            "default_value": "gh:gists"
         },
         {
-            "id": "kw_repos",
+            "id": "kw_user_organizations",
             "type": "keyword",
-            "name": "GitHub Repos",
+            "name": "GitHub: My Organizations",
+            "description": "List your GitHub organizations",
+            "default_value": "gh:user:orgs"
+        },
+        {
+            "id": "kw_issues_assigned",
+            "type": "keyword",
+            "name": "GitHub: My Assigned Issues",
+            "description": "List the issues that were assigned to you on GitHub",
+            "default_value": "gh:issues:assigned"
+        },
+        {
+            "id": "kw_issues_created",
+            "type": "keyword",
+            "name": "GitHub: My Created Issues",
+            "description": "List the issues that were created by you on GitHub",
+            "default_value": "gh:issues:created"
+        },
+        {
+            "id": "kw_user_pulls_assigned",
+            "type": "keyword",
+            "name": "GitHub: My Assigned Pull Requests",
+            "description": "List Assigned Pull Requests on GitHub",
+            "default_value": "gh:prs:assigned"
+        },
+        {
+            "id": "kw_user_pulls_created",
+            "type": "keyword",
+            "name": "GitHub: My Created Pull Requests",
+            "description": "List the Pull requests you created on GitHub",
+            "default_value": "gh:prs:created"
+        },
+        {
+            "id": "kw_notifications",
+            "type": "keyword",
+            "name": "GitHub: My Notifications",
+            "description": "Display the most recent notifications on GitHub",
+            "default_value": "gh:notifications"
+        },
+        {
+            "id": "kw_user_repos",
+            "type": "keyword",
+            "name": "GitHub: My Repositories",
             "description": "Access to your GitHub repos",
-            "default_value": "ghr"
+            "default_value": "gh:repos"
         },
         {
-            "id": "kw_search",
+            "id": "kw_account",
             "type": "keyword",
-            "name": "GitHub Repos Search",
-            "description": "Search public repos on GitHub",
-            "default_value": "ghs"
+            "name": "GitHub: My Account",
+            "description": "Access to common options from the account settings",
+            "default_value": "gh:account"
+        },
+        {
+            "id": "kw_docs",
+            "type": "keyword",
+            "name": "GitHub: Search Documentation",
+            "description": "Search on GitHub Documentation",
+            "default_value": "gh:docs"
+        },
+        {
+            "id": "kw_options",
+            "type": "keyword",
+            "name": "GitHub: Extension Options",
+            "description": "Access extension options",
+            "default_value": "gh"
         },
         {
             "id": "access_token",
