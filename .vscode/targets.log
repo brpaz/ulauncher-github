@@ -1,0 +1,431 @@
+make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+
+# GNU Make 4.3
+# Built for x86_64-redhat-linux-gnu
+# Copyright (C) 1988-2020 Free Software Foundation, Inc.
+# License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+# This is free software: you are free to change and redistribute it.
+# There is NO WARRANTY, to the extent permitted by law.
+
+# Make data base, printed on Sun Jul 24 15:49:02 2022
+
+# Variables
+
+# environment
+FZF_DEFAULT_OPTS = --reverse --height 40% --ansi --bind='alt-enter:execute(xdg-open {})+abort'
+# environment
+GO111MODULE = on
+# environment
+GDK_BACKEND = x11
+# environment
+LC_ALL = C
+# environment
+NO_AT_BRIDGE = 1
+# environment
+RESTIC_PASSWORD = 9SZWp7CxUoX08hxp3F0qWfOQ
+# environment
+FNM_DIR = /home/bruno/.fnm
+# environment
+STARSHIP_SESSION_KEY = 1927014566902556
+# environment
+GJS_DEBUG_OUTPUT = stderr
+# environment
+LC_NUMERIC = pt_PT.UTF-8
+# environment
+VSCODE_CWD = /home/bruno
+# environment
+ANTIDOTE_HOME = /home/bruno/.local/share/antidote/plugins
+# environment
+WINDOWPATH = 2
+# environment
+MODULES_CMD = /usr/share/Modules/libexec/modulecmd.tcl
+# environment
+GDM_LANG = en_US.UTF-8
+# default
+MAKE_COMMAND := make
+# environment
+FPATH = /home/bruno/.zsh/completion:/usr/share/Modules/init/zsh-functions:/usr/local/share/zsh/site-functions:/usr/share/zsh/site-functions:/usr/share/zsh/5.8.1/functions:/home/bruno/.local/share/antidote/plugins/mattmc3/zshrc.d:/home/bruno/.local/share/antidote/plugins/zsh-users/zsh-completions:/home/bruno/.local/share/antidote/plugins/zsh-users/zsh-completions/src:/home/bruno/.local/share/antidote/plugins/urbainvaes/fzf-marks:/home/bruno/.local/share/antidote/plugins/MichaelAquilina/zsh-you-should-use:/home/bruno/.local/share/antidote/plugins/peterhurford/up.zsh:/home/bruno/.local/share/antidote/plugins/ohmyzsh/ohmyzsh/plugins/extract:/home/bruno/.local/share/antidote/plugins/ohmyzsh/ohmyzsh/plugins/zoxide:/home/bruno/.local/share/antidote/plugins/ohmyzsh/ohmyzsh/plugins/zsh-interactive-cd
+# environment
+GOPATH = /home/bruno/go
+# automatic
+@D = $(patsubst %/,%,$(dir $@))
+# environment
+VSCODE_HANDLES_UNCAUGHT_ERRORS = true
+# default
+.VARIABLES := 
+# environment
+PWD = /home/bruno/Code/Personal/ulauncher-extensions/ulauncher-github
+# automatic
+%D = $(patsubst %/,%,$(dir $%))
+# environment
+HOSTNAME = bruno-zenbook
+# environment
+MAIL = /var/spool/mail/bruno
+# environment
+XDG_DATA_DIRS = /home/bruno/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop
+# environment
+OLDPWD = /home/bruno
+# environment
+MODULES_RUN_QUARANTINE = LD_LIBRARY_PATH LD_PRELOAD
+# automatic
+^D = $(patsubst %/,%,$(dir $^))
+# automatic
+%F = $(notdir $%)
+# environment
+VSCODE_CODE_CACHE_PATH = /home/bruno/.config/Code/CachedData/92d25e35d9bf1a6b16f7d0758f25d48ace11e5b9
+# environment
+FNM_VERSION_FILE_STRATEGY = local
+# environment
+LANG = C
+# environment
+GUESTFISH_OUTPUT = \e[0m
+# environment
+XAUTHORITY = /run/user/1000/gdm/Xauthority
+# default
+.LOADED := 
+# default
+.INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
+# environment
+FNM_NODE_DIST_MIRROR = https://nodejs.org/dist
+# makefile (from 'Makefile', line 2)
+EXT_NAME := com.github.com.brpaz.ulauncher-github
+# environment
+GUESTFISH_INIT = \e[1;34m
+# makefile
+MAKEFLAGS = pqrR
+# environment
+FZF_COMPLETION_TRIGGER = ~~
+# environment
+FNM_LOGLEVEL = info
+# makefile
+CURDIR := /home/bruno/Code/Personal/ulauncher-extensions/ulauncher-github
+# environment
+export = 
+# environment
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+# environment
+LESSOPEN = ||/usr/bin/lesspipe.sh %s
+# automatic
+*D = $(patsubst %/,%,$(dir $*))
+# environment
+FNM_ARCH = x64
+# environment
+MFLAGS = -pqrR
+# environment
+SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
+# default
+.SHELLFLAGS := -c
+# environment
+RESTIC_REPOSITORY = b2:brpaz-laptop-backup
+# environment
+GITHUB_USER = brpaz
+# environment
+HISTSIZE = 5000
+# environment
+ARGOS_CIRCLECI_TOKEN = db18dd5c0284a8cee01387319220a5ea486554bb
+# automatic
++D = $(patsubst %/,%,$(dir $+))
+# environment
+XDG_SESSION_DESKTOP = gnome-xorg
+# makefile (from 'Makefile', line 1)
+MAKEFILE_LIST := Makefile
+# automatic
+@F = $(notdir $@)
+# environment
+VSCODE_PID = 9901
+# environment
+XDG_SESSION_TYPE = x11
+# automatic
+?D = $(patsubst %/,%,$(dir $?))
+# environment
+FZF_DEFAULT_COMMAND = fd --hidden
+# makefile (from 'Makefile', line 3)
+EXT_DIR := /home/bruno/Code/Personal/ulauncher-extensions/ulauncher-github
+# environment
+SESSION_MANAGER = local/unix:@/tmp/.ICE-unix/6632,unix/unix:/tmp/.ICE-unix/6632
+# automatic
+*F = $(notdir $*)
+# environment
+MANPATH = /usr/share/man:
+# environment
+QT_QPA_PLATFORMTHEME = gtk2
+# environment
+MODULEPATH = /etc/scl/modulefiles:/etc/scl/modulefiles:/usr/share/Modules/modulefiles:/etc/modulefiles:/usr/share/modulefiles
+# environment
+ARGOS_GH_NOTIFICATIONS_GITHUB_TOKEN = be6f2d0d1e651c0703fa06773a70dd725c5a7352
+# environment
+CHROME_DESKTOP = code-url-handler.desktop
+# environment
+DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
+# automatic
+<D = $(patsubst %/,%,$(dir $<))
+# environment
+YSU_VERSION = 1.7.3
+# environment
+VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
+# default
+MAKE_HOST := x86_64-redhat-linux-gnu
+# environment
+ANDROID_HOME = /home/bruno/.android/Sdk
+# makefile
+SHELL = /bin/sh
+# default
+MAKECMDGOALS := all
+# environment
+XMODIFIERS = @im=ibus
+# environment
+GITHUB_TOKEN = 826b9d0805eb00b0a99847da891db17fc76dcbef
+# environment
+GJS_DEBUG_TOPICS = JS ERROR;JS LOG
+# environment
+SHLVL = 0
+# environment
+FZF_COMPLETION_OPTS = +c -x
+# environment
+MAKELEVEL := 0
+# environment
+TLDR_OS = linux
+# default
+MAKE = $(MAKE_COMMAND)
+# environment
+PATH = /run/user/1000/fnm_multishells/10100_1658650959566/bin:/home/bruno/.fnm:/usr/share/Modules/bin:/usr/lib64/ccache:/home/bruno/.cargo/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/var/lib/snapd/snap/bin:/home/bruno/.composer/vendor/bin:/home/bruno/.android/Sdk/tools:/home/bruno/.android/Sdk/platform-tools:/home/bruno/go/bin:/home/bruno/.npm-global/bin:/home/bruno/.gems/bin:/home/bruno/.local/bin
+# environment
+MOZ_GMP_PATH = /usr/lib64/mozilla/plugins/gmp-gmpopenh264/system-installed
+# environment
+TLDR_PAGES_URL = https://raw.githubusercontent.com/brpaz/tldr/master/pages
+# default
+MAKEFILES := 
+# environment
+MODULESHOME = /usr/share/Modules
+# environment
+LC_MONETARY = pt_PT.UTF-8
+# automatic
+^F = $(notdir $^)
+# environment
+LOADEDMODULES = 
+# environment
+LC_TIME = pt_PT.UTF-8
+# environment
+INVOCATION_ID = 5b439ae357324e50b4cedba62bf055a7
+# environment
+FNM_MULTISHELL_PATH = /run/user/1000/fnm_multishells/10100_1658650959566
+# environment
+USERNAME = bruno
+# automatic
+?F = $(notdir $?)
+# environment
+GUESTFISH_PS1 = \[\e[1;32m\]><fs>\[\e[0;31m\] 
+# environment
+XDG_CURRENT_DESKTOP = GNOME
+# automatic
++F = $(notdir $+)
+# environment
+DESKTOP_SESSION = gnome-xorg
+# environment
+B2_ACCOUNT_ID = 000ea50ed8c7e2c0000000001
+# environment
+ORIGINAL_XDG_CURRENT_DESKTOP = GNOME
+# 'override' directive
+GNUMAKEFLAGS := 
+# environment
+LOGNAME = bruno
+# environment
+FZF_CTRL_T_COMMAND = fd --hidden
+# environment
+GIO_LAUNCHED_DESKTOP_FILE = /usr/share/applications/code.desktop
+# makefile
+.DEFAULT_GOAL := help
+# environment
+SYSTEMD_EXEC_PID = 6691
+# environment
+HISTCONTROL = ignoredups
+# environment
+EDITOR = vim
+# environment
+DISPLAY = :0
+# environment
+USER = bruno
+# default
+MAKE_VERSION := 4.3
+# 'override' directive
+.SHELLSTATUS := 0
+# environment
+MANAGERPID = 6385
+# environment
+which_declare = typeset -f
+# environment
+LC_MEASUREMENT = pt_PT.UTF-8
+# environment
+STARSHIP_SHELL = zsh
+# environment
+DEBUGINFOD_URLS = https://debuginfod.fedoraproject.org/ 
+# environment
+GIO_LAUNCHED_DESKTOP_FILE_PID = 9901
+# environment
+SSH_AGENT_PID = 6572
+# environment
+_ = /usr/bin/make
+# environment
+LC_PAPER = pt_PT.UTF-8
+# environment
+GEM_HOME = /home/bruno/.gems
+# environment
+XDG_RUNTIME_DIR = /run/user/1000
+# environment
+S_COLORS = auto
+# environment
+JOURNAL_STREAM = 8:51775
+# environment
+XDG_SESSION_CLASS = user
+# environment
+VSCODE_AMD_ENTRYPOINT = vs/workbench/api/node/extensionHostProcess
+# environment
+HOME = /home/bruno
+# environment
+QT_IM_MODULE = ibus
+# environment
+ELECTRON_RUN_AS_NODE = 1
+# environment
+VSCODE_IPC_HOOK = /run/user/1000/vscode-15dc97f4-1.69.0-main.sock
+# default
+.RECIPEPREFIX := 
+ 
+# automatic
+<F = $(notdir $<)
+# default
+SUFFIXES := 
+# environment
+GUESTFISH_RESTORE = \e[0m
+# default
+.FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink guile load
+# environment
+TLDR_ZIP_URL = https://raw.githubusercontent.com/brpaz/tldr/master/assets/pages.zip
+# environment
+B2_ACCOUNT_KEY = K000Sze/5NdsD+pTlkGDuLIhMaq2hTw
+# environment
+XDG_MENU_PREFIX = gnome-
+# environment
+GDMSESSION = gnome-xorg
+# variable set hash-table stats:
+# Load=147/1024=14%, Rehash=0, Collisions=13/180=7%
+
+# Pattern-specific Variable Values
+
+# No pattern-specific variable values.
+
+# Directories
+
+# . (device 64770, inode 12330355): 22 files, no impossibilities.
+
+# 22 files, no impossibilities in 1 directories.
+
+# Implicit Rules
+
+# No implicit rules.
+
+# Files
+
+lint:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 12):
+	@flake8
+
+unlink:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 21):
+	@rm -rf ~/.local/share/ulauncher/extensions/${EXT_NAME}
+
+# Not a target:
+Makefile:
+#  Implicit rule search has been done.
+#  Last modified 2022-06-15 08:55:18.394735125
+#  File has been updated.
+#  Successfully updated.
+
+.DEFAULT_TARGET: help
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+.DEFAULT:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+dev:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 27):
+	ulauncher --no-extensions --dev -v |& grep "ulauncher-github"
+
+# Not a target:
+all:
+#  Command line target.
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has not been updated.
+
+link:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 18):
+	@ln -s ${EXT_DIR} ~/.local/share/ulauncher/extensions/${EXT_NAME}
+
+help:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 9):
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+format:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 15):
+	@yapf --in-place --recursive .
+
+deps:
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 24):
+	@pip3 install -r requirements.txt
+
+.PHONY: help lint format link unlink deps dev
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# files hash-table stats:
+# Load=13/1024=1%, Rehash=0, Collisions=0/38=0%
+# VPATH Search Paths
+
+# No 'vpath' search paths.
+
+# No general ('VPATH' variable) search path.
+
+# strcache buffers: 1 (0) / strings = 36 / storage = 315 B / avg = 8 B
+# current buf: size = 8162 B / used = 315 B / count = 36 / avg = 8 B
+
+# strcache performance: lookups = 57 / hit rate = 36%
+# hash-table stats:
+# Load=36/8192=0%, Rehash=0, Collisions=0/57=0%
+# Finished Make data base on Sun Jul 24 15:49:02 2022
+
+ 

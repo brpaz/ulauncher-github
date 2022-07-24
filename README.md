@@ -16,31 +16,34 @@
 - Search public repos and users
 - Search on [GitHub Documentation pages](https://docs.github.com/en)
 
-## Requirements
+## Getting started
 
-- [ulauncher 5](https://ulauncher.io/)
-- Python > 3
 
-## Install
+### Pre-Requisites
+
+This extension requires Python > 3 and a few python packages installed on your system.
+
+To install them, you can run the following command, on your terminal:
+
+```bash
+pip install -r https://github.com/brpaz/ulauncher-github/blob/master/requirements.txt
+```
+
+### Install the extension
+
 
 Open ulauncher preferences window -> extensions -> add extension and paste the following url:
 
 `https://github.com/brpaz/ulauncher-github`
 
-**This extension requires [PyGitHub](https://pygithub.readthedocs.io/en/latest/introduction.html) and [requests](https://pypi.org/project/requests/) for it to work.**
 
-You can install all the required dependencies by after installing the extension run the following command:
-
-```bash
-cd ~/.local/share/ulauncher/extensions/com.github.com.brpaz.ulauncher-github
-pip install -r requirements.txt
-```
-
-## Usage
+### Extension Settings
 
 Before being able to start using the extension, you must generate a **Personal Access Token** (PAT) and configure it in the extension settings. The access token will allow the extension to access the GitHub API.
 
 You can generate yours [here](https://github.com/settings/tokens). Make sure you select at least the permissions for "repo", "read:org", "gist", "user" and "notifications", otherwise you might see errors when using some specific commands in the extension.
+
+## Usage
 
 This extension provides various commands/keywords to access the different functionality. If you type `GitHub` in Ulauncher you should see the available commands.
 
