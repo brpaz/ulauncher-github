@@ -1,2 +1,2 @@
-pygithub=~1.55
+pygithub~=1.55
 requests
