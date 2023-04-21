@@ -121,7 +121,7 @@ class GitHubExtension(Extension):
         Args:
           text (str): The text to display on the notification
         """
-        if self.os_notifs:
+        if self.os_notifs == "true":
             Notify.Notification.new("Ulauncher GitHub", text).show()
 
     def handle_github_exception(self, e: GithubException):
