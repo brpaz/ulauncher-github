@@ -111,7 +111,7 @@
         	"type": "select",
         	"name": "Enable Notifications?",
         	"description": "Should a notification be sent",
-        	"options": {"True": true, "False": false},
+        	"options": [true, false],
         	"default_value": true
         }
     ]
