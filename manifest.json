@@ -112,7 +112,7 @@
         	"name": "Enable Notifications?",
         	"description": "Should a notification be sent",
         	"options": {"True": true, "False": false},
-        	"default_value": "True"
+        	"default_value": true
         }
     ]
 }
