@@ -58,6 +58,7 @@ class GitHubExtension(Extension):
         self.subscribe(ItemEnterEvent, ItemEnterEventListener())
 
         self.icon_path = 'images/icon.png'
+        self.os_notifs = None
         self.github: Github = None
         self.user: AuthenticatedUser = None
         self.cache = Cache(CACHE_DIR)
@@ -83,7 +84,7 @@ class GitHubExtension(Extension):
         sync_service = GitHubDataSync(self.github, self.cache)
 
         try:
-
+            self.preferences
             self.show_notification("Indexing GitHub data")
 
             start_time = time.time()
@@ -116,11 +117,12 @@ class GitHubExtension(Extension):
 
     def show_notification(self, text: str):
         """
-        Shows a notification
+        Shows a notification, if notifications are enabled
         Args:
           text (str): The text to display on the notification
         """
-        Notify.Notification.new("Ulauncher GitHub", text).show()
+        if self.os_notifs == "true":
+            Notify.Notification.new("Ulauncher GitHub", text).show()
 
     def handle_github_exception(self, e: GithubException):
         logger.error(e)
