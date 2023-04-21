@@ -58,7 +58,7 @@ class GitHubExtension(Extension):
         self.subscribe(ItemEnterEvent, ItemEnterEventListener())
 
         self.icon_path = 'images/icon.png'
-        self.notifications_enabled = None
+        self.os_notifs = None
         self.github: Github = None
         self.user: AuthenticatedUser = None
         self.cache = Cache(CACHE_DIR)
@@ -121,7 +121,7 @@ class GitHubExtension(Extension):
         Args:
           text (str): The text to display on the notification
         """
-        if self.notifications_enabled:
+        if self.os_notifs:
             Notify.Notification.new("Ulauncher GitHub", text).show()
 
     def handle_github_exception(self, e: GithubException):
