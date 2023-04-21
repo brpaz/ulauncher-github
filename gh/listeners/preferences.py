@@ -12,6 +12,7 @@ class PreferencesEventListener(EventListener):
     def on_event(self, event, extension):
         """ Handle event """
         extension.os_notifs = event.preferences['os_notifs']
+        logger.error(extension.os_notifs)
         extension.github = Github(event.preferences['access_token'])
         try:
             extension.refresh_user()
