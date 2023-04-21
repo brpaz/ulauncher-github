@@ -105,6 +105,14 @@
             "name": "GitHub access token",
             "description": "The Personal Access token to authenticate on GitHub API",
             "default_value": ""
+        },
+        {
+        	"id": "os_notifs",
+        	"type": "select",
+        	"name": "Enable Notifications?",
+        	"description": "Should a notification be sent",
+        	"options": {"True": true, "False": false},
+        	"default_value": "True"
         }
     ]
 }
