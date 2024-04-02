@@ -26,7 +26,7 @@ This extension requires Python > 3 and a few python packages installed on your s
 To install them, you can run the following command, on your terminal:
 
 ```bash
-pip install -r https://github.com/brpaz/ulauncher-github/blob/master/requirements.txt
+pip install -r https://raw.githubusercontent.com/brpaz/ulauncher-github/master/requirements.txt
 ```
 
 ### Install the extension
